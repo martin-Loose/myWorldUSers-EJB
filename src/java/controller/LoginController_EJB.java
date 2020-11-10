@@ -53,7 +53,7 @@ public class LoginController_EJB {
             request.getSession().setAttribute("username", getAuthenticatedUser().getUsername());
             if (request.isUserInRole("users")) {
                 System.out.println("logged in - eigentlich");
-                return "/secured/user/userIndex?faces-redirect=true";
+                return "/secured/user/users/userIndex?faces-redirect=true";
             } else if (request.isUserInRole("admin")) {
                 return "/secured/admin/adminIndex?faces-redirect=true";
             } else if (request.isUserInRole("masteradmin")) {

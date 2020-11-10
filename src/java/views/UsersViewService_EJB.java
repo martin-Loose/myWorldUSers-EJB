@@ -43,7 +43,7 @@ public void resetSelectedUser(){
     public String setSelectedUser(Users selectedUser) {
        
         this.selectedUser = selectedUser;
-        return "/secured/user/userDetails?faces-redirect=true";//"/secured/user/userIndex?faces-redirect=true";
+        return "/secured/user/users/userDetails?faces-redirect=true";//"/secured/user/userIndex?faces-redirect=true";
     }
 
     public List<Users> getUserList() {
