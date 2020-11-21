@@ -14,8 +14,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.DatatypeConverter;
 
-
-public final class AuthenticationUtils {
+/**
+ *
+ * @author marlo0212
+ */
+public class AuthenticationUtils {
 public static String coded;
     /**
      * Returns SHA-256 encoded string
