@@ -6,8 +6,11 @@
 package controller;
 
 import entities.Users;
+import entities.Whoisonline;
+
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,23 +21,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import jpa.UsersFacadeLocal;
+import jpa.WhoisonlineFacadeLocal;
+
 
 /**
  *
  * @author marlo0212
  */
 public class LoginController_EJB {
-
     private String username;
     private String passwort;
     private String email;
-
     private Users authenticatedUser;
     private static final long serialVersionUID = 3254181235309041386L;
-    private static final Logger log = Logger.getLogger(LoginController_EJB.class.getName());
+    private static final Logger LOG = Logger.getLogger(LoginController_EJB.class.getName());
     @Inject
     private UsersFacadeLocal userEJB;
-
+   @Inject
+   private WhoisonlineFacadeLocal whoIsOnlineFacade;
 //---------------------------------------------------------------
     private String userDataHeader = "";
 //***************************************************************        
@@ -52,8 +56,8 @@ public class LoginController_EJB {
             System.out.println("Login 2 " + " -- " + request.getSession().getAttribute("username").toString() + "");
             request.getSession().setAttribute("username", getAuthenticatedUser().getUsername());
             if (request.isUserInRole("users")) {
-                System.out.println("logged in - eigentlich");
-                return "/secured/user/users/userIndex?faces-redirect=true";
+               
+                             return "/secured/user/users/userIndex?faces-redirect=true";
             } else if (request.isUserInRole("admin")) {
                 return "/secured/admin/adminIndex?faces-redirect=true";
             } else if (request.isUserInRole("masteradmin")) {
@@ -116,7 +120,7 @@ public class LoginController_EJB {
 
         } catch (ServletException e) {
             setAuthenticatedUser(new Users());
-            log.log(Level.SEVERE, "Failed to logout user!", e);
+            LOG.log(Level.SEVERE, "Failed to logout user!", e);
         }
         return "/public/publicIndex?faces-redirect=true";
     }
@@ -126,6 +130,28 @@ public class LoginController_EJB {
     }
 
     public void setAuthenticatedUser(Users authenticatedUser) {
+       Whoisonline whoisOnliner=new Whoisonline();
+    System.err.println("whois: "+whoIsOnlineFacade.count());
+    try{
+    if(whoIsOnlineFacade.findByUserID(authenticatedUser.getId())==null){
+        whoisOnliner.setId(0);
+    whoisOnliner.setUserID(authenticatedUser.getId());
+    whoisOnliner.setWhenLastLogOut(null);
+    whoisOnliner.setWhenLastLogin(new Date());
+    whoisOnliner.setIsOnline(true);
+    whoIsOnlineFacade.create(whoisOnliner);
+    System.err.println("whois: "+whoIsOnlineFacade.count());
+    }else{
+     whoisOnliner=whoIsOnlineFacade.findByUserID(authenticatedUser.getId());
+       whoisOnliner.setWhenLastLogOut(null);
+    whoisOnliner.setWhenLastLogin(new Date());
+    whoisOnliner.setIsOnline(true);
+     whoIsOnlineFacade.edit(whoisOnliner);
+    }
+    }catch(NullPointerException np){
+    
+    }
+    
         this.authenticatedUser = authenticatedUser;
     }
 
@@ -184,4 +210,7 @@ public class LoginController_EJB {
         this.username = username;
     }
 
+    private void addUserAsOnline(){
+  
+    }
 }
