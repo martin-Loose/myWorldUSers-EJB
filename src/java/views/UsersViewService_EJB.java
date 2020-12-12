@@ -73,7 +73,8 @@ public void resetSelectedUser(){
     
   public void findbyStart(){
       System.err.println("search: "+usersFacade.findByStartString(searchString).size());
-      if(getSearchString().contains(" ")==true){
+    //  if(getSearchString().contains(" ")==true){
+          if(getSearchString().isEmpty()){
       setToShow(false);
       }else{
       setToShow(true);}
