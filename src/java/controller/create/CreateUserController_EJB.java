@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.create;
 
 import entities.Users;
 import entities.UsersGroups;
@@ -38,12 +38,12 @@ private UsersGroupsFacadeLocal usersGroups;
     public String createUser() {
         try {
             if(usersFacadeLocal.findByName(username)!=null){
-                    FacesContext.getCurrentInstance().addMessage("formUserInput:username",
-                             new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "Username vergeben"));
+                    FacesContext.getCurrentInstance().addMessage(null,
+                             new FacesMessage(FacesMessage.SEVERITY_FATAL, "Username vergeben", "Username vergeben"));
                 } 
                 if(!usersFacadeLocal.findByMail(email).isEmpty()){
-                    FacesContext.getCurrentInstance().addMessage("formUserInput:email",
-                             new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "email vergeben"));    
+                    FacesContext.getCurrentInstance().addMessage(null,
+                             new FacesMessage(FacesMessage.SEVERITY_FATAL, "email vergeben", "email vergeben"));    
                 }
          
                 if (usersFacadeLocal.findByName(username)==null
@@ -54,10 +54,13 @@ private UsersGroupsFacadeLocal usersGroups;
                     newUser.setPassword(AuthenticationUtils.encodeSHA256(passwort));
                      newUser.setUsername(username);
                     usersFacadeLocal.create(newUser);
+                    CreateFileAndFolderController_EJB creatFileAndFolder=new CreateFileAndFolderController_EJB();
+                    creatFileAndFolder.setUsername(username);
                     UsersGroups usersGroup =new UsersGroups();
                     usersGroup.setGruppenname("users");
                     usersGroup.setUserid(username);
                     usersGroups.create(usersGroup);
+                    creatFileAndFolder.prepareFolders();
                     System.err.println("username: "+username + " email: "+email + "passwort: "+passwort);
                     return "/public/regdone?faces-redirect=true";
                 } 
@@ -137,4 +140,7 @@ return check;
     public void setConfirmPasswort(String confirmPasswort) {
         this.confirmPasswort = confirmPasswort;
     }
+
+   
+    
 }

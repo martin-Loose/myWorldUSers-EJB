@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,12 +31,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u")
-    , @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id")// , @NamedQuery(name = "Users.findLikeUsername", query = "SELECT u FROM Users u WHERE u.username LIKE :username")
-        , @NamedQuery(name = "Users.findByStartString", query = "SELECT u FROM Users u WHERE  u.username LIKE CONCAT('%', :searchString,'%')")// LIKE CONCAT('%',:searchKeyword,'%')"
-    , @NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username")//searchKeyword+"%" means return values which starts with searchKeyword.
-//"%"+searchKeyword+"%" means return values which contains searchKeyword.
+    , @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id")
+    , @NamedQuery(name = "Users.findByStartString", query = "SELECT u FROM Users u WHERE  u.username LIKE CONCAT('%', :searchString,'%')")// LIKE CONCAT('%',:searchKeyword,'%')"
+        , @NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username")
     , @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password")
-    , @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email")})
+    , @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email")
+    , @NamedQuery(name = "Users.findByActivatelink", query = "SELECT u FROM Users u WHERE u.activatelink = :activatelink")
+    , @NamedQuery(name = "Users.findByBolActivate", query = "SELECT u FROM Users u WHERE u.bolActivate = :bolActivate")
+    , @NamedQuery(name = "Users.findByTemppasswort", query = "SELECT u FROM Users u WHERE u.temppasswort = :temppasswort")
+    , @NamedQuery(name = "Users.findByLinkgueltigbis", query = "SELECT u FROM Users u WHERE u.linkgueltigbis = :linkgueltigbis")
+    , @NamedQuery(name = "Users.findByAvatar", query = "SELECT u FROM Users u WHERE u.avatar = :avatar")
+    , @NamedQuery(name = "Users.findByUserPic", query = "SELECT u FROM Users u WHERE u.userPic = :userPic")})
 public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,6 +66,21 @@ public class Users implements Serializable {
     @Size(min = 1, max = 45)
     @Column(nullable = false, length = 45)
     private String email;
+    @Size(max = 255)
+    @Column(length = 255)
+    private String activatelink;
+    private Boolean bolActivate;
+    @Size(max = 255)
+    @Column(length = 255)
+    private String temppasswort;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date linkgueltigbis;
+    @Size(max = 40)
+    @Column(length = 40)
+    private String avatar;
+    @Size(max = 40)
+    @Column(length = 40)
+    private String userPic;
 
     public Users() {
     }
@@ -105,6 +128,54 @@ public class Users implements Serializable {
         this.email = email;
     }
 
+    public String getActivatelink() {
+        return activatelink;
+    }
+
+    public void setActivatelink(String activatelink) {
+        this.activatelink = activatelink;
+    }
+
+    public Boolean getBolActivate() {
+        return bolActivate;
+    }
+
+    public void setBolActivate(Boolean bolActivate) {
+        this.bolActivate = bolActivate;
+    }
+
+    public String getTemppasswort() {
+        return temppasswort;
+    }
+
+    public void setTemppasswort(String temppasswort) {
+        this.temppasswort = temppasswort;
+    }
+
+    public Date getLinkgueltigbis() {
+        return linkgueltigbis;
+    }
+
+    public void setLinkgueltigbis(Date linkgueltigbis) {
+        this.linkgueltigbis = linkgueltigbis;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getUserPic() {
+        return userPic;
+    }
+
+    public void setUserPic(String userPic) {
+        this.userPic = userPic;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -127,11 +198,7 @@ public class Users implements Serializable {
 
     @Override
     public String toString() {
-        return "\n"
-                +"username "+username+"\n"
-                +"id "+id+"\n"
-                +"email "+email+"\n"
-                +"password "+password+"\n";
+        return "entities.Users[ id=" + id + " ]";
     }
     
 }

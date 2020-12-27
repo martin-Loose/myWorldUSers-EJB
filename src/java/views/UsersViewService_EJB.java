@@ -41,7 +41,7 @@ public void resetSelectedUser(){
     }
 
     public String setSelectedUser(Users selectedUser) {
-       
+        System.err.println("selectedUSER???? "+selectedUser.getUsername() + " "+selectedUser.getAvatar());
         this.selectedUser = selectedUser;
         return "/secured/user/users/userDetails?faces-redirect=true";//"/secured/user/userIndex?faces-redirect=true";
     }
